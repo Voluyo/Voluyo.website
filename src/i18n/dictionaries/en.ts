@@ -1,0 +1,311 @@
+import type { HostKind, HostType, OpportunityCategory, SkillId } from '@/domain/taxonomy';
+import type { DateRangeError } from '@/features/discovery/dates';
+import { list, type Faq, type LegalDoc, type Step } from './shared';
+
+/** English is the source dictionary; every other locale must match its shape. */
+export const en = {
+  meta: {
+    title: 'voluyo — Travel with purpose, stay with impact',
+    description:
+      'voluyo connects adult travelers with hosts for voluntary, non-monetary skill and cultural exchange.',
+  },
+  brand: {
+    slogan: 'Travel with purpose, stay with impact.',
+    homeLabel: 'voluyo — home',
+  },
+  nav: {
+    primaryLabel: 'Main',
+    explore: 'Explore',
+    howItWorks: 'How it works',
+    becomeHost: 'Become a Host',
+    help: 'Help Center',
+    login: 'Log in',
+    signup: 'Sign up',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
+    skipToContent: 'Skip to content',
+    languageLabel: 'Language',
+  },
+  demo: {
+    banner:
+      'Development preview: every host and opportunity shown here is a fictional demo record — not real, not verified and not bookable.',
+    badge: 'Demo',
+    badgeTitle: 'Fictional demo record',
+  },
+  status: {
+    live: 'Available now',
+    planned: 'Planned',
+    notYetAvailable: 'Not yet available',
+  },
+  footer: {
+    navTitle: 'Discover',
+    legalTitle: 'Legal',
+    legalNote: 'Legal pages are placeholders and not production-ready.',
+    rights: '© {year} voluyo · Work in progress, not yet launched.',
+  },
+  search: {
+    formLabel: 'Search hosts and opportunities',
+    destinationLegend: 'Destination',
+    datesLegend: 'Travel dates',
+    country: 'Country',
+    anyCountry: 'Any country',
+    city: 'City / location',
+    cityPlaceholder: 'e.g. Lisbon',
+    checkIn: 'Check-in',
+    checkOut: 'Check-out',
+    submit: 'Search',
+    submitting: 'Searching…',
+    hostType: 'Host type',
+    anyHostType: 'All host types',
+    category: 'Project category',
+    anyCategory: 'All categories',
+    skill: 'Skill',
+    anySkill: 'Any skill',
+    apply: 'Apply filters',
+    reset: 'Reset filters',
+    filters: 'Filters',
+    activeCount: { one: '{count} active', other: '{count} active' },
+    errors: {
+      incomplete: 'Please enter both check-in and check-out, or leave both empty.',
+      invalid: 'Please enter valid dates.',
+      order: 'Check-out must be after check-in.',
+      past: 'Check-in cannot be in the past.',
+    } satisfies Record<DateRangeError, string>,
+  },
+  home: {
+    eyebrow: 'Skill & cultural exchange · adults 18+',
+    title: 'Share your skills. Live the place.',
+    lead: 'voluyo connects travelers with NGOs, community projects, hostels, hotels, schools, private hosts and families — for voluntary exchange without money changing hands.',
+    featured: {
+      title: 'Hosts looking for your skills',
+      lead: 'Each host can offer several opportunities — filter by what you can bring.',
+      exploreAll: 'Explore all opportunities',
+      emptyTitle: 'No hosts are published yet',
+      emptyBody:
+        'voluyo is preparing its pilot. Host profiles appear here only after they have been reviewed and approved.',
+    },
+    destinations: {
+      title: 'Start with a place',
+      lead: 'Pick a city and see who is hosting there.',
+      count: { one: '{count} opportunity', other: '{count} opportunities' },
+      empty: 'Destinations appear once approved hosts publish opportunities.',
+    },
+    how: {
+      title: 'How voluyo works',
+      lead: 'A fair exchange of time, skills and culture. No wages are paid and nothing is bought or sold.',
+      more: 'Read the full guide',
+    },
+    host: {
+      title: 'Host travelers who bring real skills',
+      lead: 'Organizations, private individuals and families can welcome travelers who contribute to their projects and everyday life.',
+      points: list<string>([
+        'Describe your host profile and each opportunity separately',
+        'Profiles become public only after approval',
+        'Safety checks are planned — tailored to organizations and private hosts',
+      ]),
+      cta: 'Learn about hosting',
+    },
+  },
+  explore: {
+    title: 'Explore hosts & opportunities',
+    lead: 'Filter by destination, travel dates, host type, project category and skills.',
+    hostsCount: { one: '{count} host', other: '{count} hosts' },
+    opportunitiesCount: { one: '{count} opportunity', other: '{count} opportunities' },
+    activeFilters: 'Active filters',
+    removeFilter: 'Remove filter: {label}',
+    dateFilterNotApplied: 'The date filter was not applied.',
+    noData: {
+      title: 'No hosts are published yet',
+      body: 'There are no approved host profiles yet. Real opportunities will be listed here once hosts have been reviewed and approved.',
+    },
+    noMatch: {
+      title: 'No matches for these filters',
+      body: 'Try another city, different dates or fewer filters.',
+    },
+    view: {
+      label: 'Results view',
+      list: 'List',
+      map: 'Map',
+      mapPlanned:
+        'A map view is planned for a later release. It will only show approximate areas — never exact addresses.',
+    },
+    matching: 'Matching opportunities',
+    more: { one: '+{count} more', other: '+{count} more' },
+  },
+  host: {
+    breadcrumb: 'Breadcrumb',
+    location: 'Location',
+    locationNote: 'Only the city or region is public. Exact addresses are never published.',
+    about: 'About this host',
+    languages: 'Languages spoken',
+    requestedSkills: 'Skills requested',
+    availability: 'Available exchange periods',
+    opportunities: 'Opportunities',
+    skillsShort: 'Skills',
+    availableShort: 'Available',
+    applyTitle: 'Interested?',
+    applyButton: 'Apply',
+    applyNote: 'Applications open in a later release. Nothing is sent from this page.',
+    photosNote: 'No photos yet. Images will only be shown once a host provides properly licensed pictures.',
+    verificationNote: 'Verification is not live yet. No host on voluyo is currently marked as verified.',
+    demoNotice:
+      'This is a fictional demo profile used to preview the layout. It does not describe a real organization or person.',
+  },
+  hostKinds: {
+    organization: 'Organization',
+    private: 'Private host',
+  } satisfies Record<HostKind, string>,
+  hostTypes: {
+    ngo: 'NGO',
+    aid_community_project: 'Aid & community project',
+    hotel: 'Hotel',
+    hostel: 'Hostel',
+    education: 'Educational organization',
+    other_organization: 'Other organization',
+    private_individual: 'Private individual',
+    family: 'Family',
+  } satisfies Record<HostType, string>,
+  categories: {
+    education_teaching: 'Education & teaching',
+    community_development: 'Community development',
+    environment_conservation: 'Environment & conservation',
+    farming_gardening: 'Farming & gardening',
+    cultural_exchange: 'Cultural & language exchange',
+    creative_media: 'Creative & media',
+    digital_tech: 'Digital & tech',
+    building_repair: 'Building & repair',
+  } satisfies Record<OpportunityCategory, string>,
+  skills: {
+    teaching: 'Teaching',
+    english: 'English',
+    german: 'German',
+    spanish: 'Spanish',
+    web_development: 'Web development',
+    graphic_design: 'Graphic design',
+    photography: 'Photography',
+    social_media: 'Social media',
+    carpentry: 'Carpentry',
+    gardening: 'Gardening',
+    cooking: 'Cooking',
+    event_hosting: 'Event hosting',
+  } satisfies Record<SkillId, string>,
+  howItWorks: {
+    title: 'How it works',
+    lead: 'voluyo is being built step by step. Here is what you can do today and what is planned next.',
+    travelersTitle: 'For travelers',
+    travelerSteps: list<Step>([
+      {
+        title: 'Discover',
+        body: 'Search by country, city and travel dates, then filter by host type, project category and skills.',
+        status: 'live',
+      },
+      {
+        title: 'Apply personally',
+        body: 'Send a personal message explaining what you would like to contribute.',
+        status: 'planned',
+      },
+      {
+        title: 'Connect after acceptance',
+        body: 'A private chat opens only once a host accepts your application.',
+        status: 'planned',
+      },
+      {
+        title: 'Exchange & review',
+        body: 'After a completed exchange, both sides can leave a review.',
+        status: 'planned',
+      },
+    ]),
+    hostsTitle: 'For hosts',
+    hostSteps: list<Step>([
+      { title: 'Create a host profile', body: 'Introduce your organization or home and the people behind it.', status: 'planned' },
+      { title: 'Get reviewed', body: 'Profiles are checked before they become publicly visible.', status: 'planned' },
+      { title: 'Publish opportunities', body: 'Describe each opportunity, the skills you need and when travelers can join.', status: 'planned' },
+      { title: 'Accept & chat', body: 'Review applications and open a chat only with travelers you accept.', status: 'planned' },
+    ]),
+    rulesTitle: 'Ground rules',
+    rules: list<string>([
+      'Adults only: travelers must be 18 or older.',
+      'Voluntary and non-monetary: no wages and no payments between travelers and hosts.',
+      'Privacy first: public pages show only a city or region — never exact addresses, live locations or contact details.',
+      'Trust is earned: a “verified” badge will only appear after real verification.',
+    ]),
+  },
+  becomeHost: {
+    title: 'Become a Host',
+    lead: 'Welcome travelers who contribute their skills to your project, organization or home — and share your culture in return.',
+    whoTitle: 'Who can host',
+    organizationsTitle: 'Organizations',
+    privateTitle: 'Private hosts',
+    privateNote: 'Private individuals and families will go through additional safety and verification steps.',
+    howTitle: 'What hosting will look like',
+    howItems: list<string>([
+      'Your host profile and your opportunities are described separately.',
+      'You say which skills you are looking for and when travelers can join.',
+      'You review applications and accept only travelers who fit.',
+      'A private chat opens only after you accept an application.',
+    ]),
+    statusTitle: 'Host registration is not yet available',
+    statusBody:
+      'Host onboarding, review and verification are still being built. Nothing on this page creates an account or collects data.',
+    helpCta: 'Visit the Help Center',
+  },
+  help: {
+    title: 'Help Center',
+    lead: 'Answers to the most common questions while voluyo is in development.',
+    faqs: list<Faq>([
+      {
+        question: 'What is voluyo?',
+        answer: 'A platform in development that connects adult travelers with hosts for voluntary, non-monetary exchange of skills and culture.',
+      },
+      {
+        question: 'Is this paid work?',
+        answer: 'No. Exchanges on voluyo are voluntary and non-monetary: hosts do not pay wages and travelers do not pay hosts. Local rules on volunteering, visas and work permits still apply — check the requirements for your destination.',
+      },
+      {
+        question: 'Are the hosts on this site real?',
+        answer: 'Not yet. In development previews every host and opportunity is a fictional demo record. Once voluyo launches, only reviewed and approved hosts will be shown.',
+      },
+      {
+        question: 'Who can join?',
+        answer: 'Travelers must be 18 or older. Hosts can be organizations — NGOs, aid and community projects, hotels, hostels, educational and other organizations — or private individuals and families.',
+      },
+      {
+        question: 'How will safety work?',
+        answer: 'Planned safeguards include verification for organizations and private hosts, reporting, blocking and moderation. Private chat will open only after a host accepts an application. None of these features are live yet.',
+      },
+      {
+        question: 'Can I sign up today?',
+        answer: 'Not yet. Sign-up and login are not available in this version.',
+      },
+    ]),
+    contactNote: 'A support contact will be published before launch.',
+  },
+  auth: {
+    loginTitle: 'Log in',
+    signupTitle: 'Sign up',
+    body: 'Accounts are not available in this version of voluyo. This page does not create an account, sign you in or collect any data.',
+    plannedTitle: 'Planned sign-in options',
+    planned: list<string>([
+      'Continue with Google',
+      'Sign in with Apple',
+      'Email and password — with email verification and password reset',
+    ]),
+    exploreCta: 'Explore opportunities',
+  },
+  legal: {
+    badge: 'Placeholder — not production-ready',
+    body: 'This page is a placeholder. It contains no legally binding information and must be replaced with reviewed legal text before voluyo launches.',
+    docs: {
+      imprint: 'Imprint',
+      privacy: 'Privacy policy',
+      terms: 'Terms of use',
+    } satisfies Record<LegalDoc, string>,
+  },
+  notFound: {
+    title: 'Page not found',
+    body: 'This page doesn’t exist — or isn’t available yet.',
+    home: 'Back to home',
+  },
+};
+
+export type Dictionary = typeof en;

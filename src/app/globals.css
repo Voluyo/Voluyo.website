@@ -1,0 +1,115 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   voluyo design tokens — PROVISIONAL
+   The official logo and brand guideline are not yet in this repository.
+   Every brand value lives here so it can be replaced in one place.
+   Direction: "field journal" — deep sea green, a low sun accent, warm paper.
+   --------------------------------------------------------------------------- */
+@theme {
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --color-ink: #10201e;
+  --color-ink-soft: #46524f;
+  --color-paper: #fbf8f3;
+  --color-sand-100: #f4ede2;
+  --color-sand-200: #eadfcd;
+  --color-line: #ddd3c3;
+
+  --color-sea-50: #eef7f4;
+  --color-sea-100: #d6ece5;
+  --color-sea-200: #acd8cb;
+  --color-sea-500: #22806e;
+  --color-sea-600: #1b6b5c;
+  --color-sea-700: #15574b;
+  --color-sea-800: #0f443b;
+  --color-sea-900: #0a302a;
+  --color-sea-950: #061f1b;
+
+  --color-sun-200: #fbd9c2;
+  --color-sun-400: #f39d6b;
+  --color-sun-500: #ee7c46;
+
+  --color-danger-50: #fdf0ee;
+  --color-danger-700: #a3241b;
+  --color-demo-100: #fff1c9;
+  --color-demo-800: #664400;
+
+  --radius-card: 1.25rem;
+  --shadow-card: 0 1px 2px rgb(16 32 30 / 0.05), 0 14px 32px -18px rgb(16 32 30 / 0.3);
+
+  --animate-rise: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 50;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  :where(a, button, input, select, summary, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-sun-500);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Hero atmosphere: low sun over deep water, with a fine paper grain. */
+  .hero-backdrop {
+    background-color: var(--color-sea-900);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      radial-gradient(55% 60% at 88% 6%, rgb(238 124 70 / 0.5), transparent 70%),
+      radial-gradient(40% 50% at 2% 98%, rgb(172 216 203 / 0.25), transparent 70%),
+      linear-gradient(165deg, var(--color-sea-800) 0%, var(--color-sea-900) 55%, var(--color-sea-950) 100%);
+  }
+
+  /* Travel-ticket search: on wide screens the two halves meet at a perforation with
+     punched notches (CSS masks), so the shape is real, not drawn on top. */
+  @media (width >= 64rem) {
+    .ticket-stub {
+      mask:
+        radial-gradient(circle 0.8rem at 100% 0, #0000 98%, #000) top / 100% 51% no-repeat,
+        radial-gradient(circle 0.8rem at 100% 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+    }
+
+    .ticket-main {
+      mask:
+        radial-gradient(circle 0.8rem at 0 0, #0000 98%, #000) top / 100% 51% no-repeat,
+        radial-gradient(circle 0.8rem at 0 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+    }
+  }
+
+  /* Postmark ring used on cover art. */
+  .postmark {
+    border: 1.5px dashed currentColor;
+    border-radius: 9999px;
+  }
+}
