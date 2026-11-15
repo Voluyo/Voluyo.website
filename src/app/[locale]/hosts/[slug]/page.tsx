@@ -30,6 +30,8 @@ export default async function HostPage({ params }: HostPageProps) {
 
   const dict = getDictionary(locale);
   const { host, opportunities } = found;
+  // Host profiles stay public without opportunities; skills and periods derive from opportunities.
+  const hasOpportunities = opportunities.length > 0;
   const city = host.location.city[locale];
   const country = countryName(locale, host.location.countryCode);
   const requested = new Set(opportunities.flatMap((opportunity) => opportunity.requestedSkills));
@@ -99,60 +101,70 @@ export default async function HostPage({ params }: HostPageProps) {
             </dl>
           </section>
 
-          <section aria-labelledby="skills-heading" className="mt-12">
-            <h2 id="skills-heading" className="text-3xl">
-              {dict.host.requestedSkills}
-            </h2>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {requestedSkills.map((skill) => (
-                <li key={skill}>
-                  <Badge tone="sun" className="px-3 py-1 text-sm">
-                    {dict.skills[skill]}
-                  </Badge>
-                </li>
-              ))}
-            </ul>
-          </section>
+          {hasOpportunities ? (
+            <>
+              <section aria-labelledby="skills-heading" className="mt-12">
+                <h2 id="skills-heading" className="text-3xl">
+                  {dict.host.requestedSkills}
+                </h2>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {requestedSkills.map((skill) => (
+                    <li key={skill}>
+                      <Badge tone="sun" className="px-3 py-1 text-sm">
+                        {dict.skills[skill]}
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              </section>
 
-          <section aria-labelledby="availability-heading" className="mt-12">
-            <h2 id="availability-heading" className="text-3xl">
-              {dict.host.availability}
-            </h2>
-            <ul className="mt-4 divide-y divide-line rounded-2xl border border-line bg-white">
-              {windows.map(({ window, opportunity }) => (
-                <li key={`${opportunity.id}-${window.start}`} className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-                  <span className="font-semibold">{formatDateRange(locale, window.start, window.end)}</span>
-                  <span className="text-sm text-ink-soft">{opportunity.title[locale]}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+              <section aria-labelledby="availability-heading" className="mt-12">
+                <h2 id="availability-heading" className="text-3xl">
+                  {dict.host.availability}
+                </h2>
+                <ul className="mt-4 divide-y divide-line rounded-2xl border border-line bg-white">
+                  {windows.map(({ window, opportunity }) => (
+                    <li key={`${opportunity.id}-${window.start}`} className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                      <span className="font-semibold">{formatDateRange(locale, window.start, window.end)}</span>
+                      <span className="text-sm text-ink-soft">{opportunity.title[locale]}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </>
+          ) : null}
 
           <section aria-labelledby="opportunities-heading" className="mt-12">
             <h2 id="opportunities-heading" className="text-3xl">
               {dict.host.opportunities}
             </h2>
-            <ul className="mt-4 grid gap-4">
-              {opportunities.map((opportunity) => (
-                <li key={opportunity.id} id={opportunity.slug} className="rounded-card border border-line bg-white p-5 shadow-card">
-                  <Badge tone="sea">{dict.categories[opportunity.category]}</Badge>
-                  <h3 className="mt-3 text-2xl leading-tight">{opportunity.title[locale]}</h3>
-                  <p className="mt-2 leading-relaxed text-ink-soft">{opportunity.summary[locale]}</p>
-                  <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-                    <div>
-                      <dt className="font-semibold">{dict.host.skillsShort}</dt>
-                      <dd className="text-ink-soft">{opportunity.requestedSkills.map((skill) => dict.skills[skill]).join(', ')}</dd>
-                    </div>
-                    <div>
-                      <dt className="font-semibold">{dict.host.availableShort}</dt>
-                      <dd className="text-ink-soft">
-                        {opportunity.availability.map((window) => formatDateRange(locale, window.start, window.end)).join('; ')}
-                      </dd>
-                    </div>
-                  </dl>
-                </li>
-              ))}
-            </ul>
+            {hasOpportunities ? (
+              <ul className="mt-4 grid gap-4">
+                {opportunities.map((opportunity) => (
+                  <li key={opportunity.id} id={opportunity.slug} className="rounded-card border border-line bg-white p-5 shadow-card">
+                    <Badge tone="sea">{dict.categories[opportunity.category]}</Badge>
+                    <h3 className="mt-3 text-2xl leading-tight">{opportunity.title[locale]}</h3>
+                    <p className="mt-2 leading-relaxed text-ink-soft">{opportunity.summary[locale]}</p>
+                    <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+                      <div>
+                        <dt className="font-semibold">{dict.host.skillsShort}</dt>
+                        <dd className="text-ink-soft">{opportunity.requestedSkills.map((skill) => dict.skills[skill]).join(', ')}</dd>
+                      </div>
+                      <div>
+                        <dt className="font-semibold">{dict.host.availableShort}</dt>
+                        <dd className="text-ink-soft">
+                          {opportunity.availability.map((window) => formatDateRange(locale, window.start, window.end)).join('; ')}
+                        </dd>
+                      </div>
+                    </dl>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-4 rounded-card border border-dashed border-line bg-white/60 p-5 text-ink-soft">
+                {dict.explore.noOpportunities}
+              </p>
+            )}
           </section>
         </div>
 

@@ -89,22 +89,28 @@ export function HostCard({ result, locale, dict }: { result: HostSearchResult; l
         </p>
         <p className="text-sm leading-relaxed">{host.summary[locale]}</p>
         <div className="mt-auto border-t border-dashed border-line pt-3">
-          <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink-soft">{dict.explore.matching}</p>
-          <ul className="mt-2 space-y-2">
-            {shown.map((opportunity) => {
-              const firstWindow = opportunity.availability[0];
-              return (
-                <li key={opportunity.id} className="text-sm leading-snug">
-                  <span className="font-semibold">{opportunity.title[locale]}</span>
-                  <span className="block text-ink-soft">
-                    {dict.categories[opportunity.category]}
-                    {firstWindow ? ` · ${formatDateRange(locale, firstWindow.start, firstWindow.end)}` : null}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-          {hiddenCount > 0 ? <p className="mt-2 text-xs font-semibold text-sea-700">{plural(locale, hiddenCount, dict.explore.more)}</p> : null}
+          {opportunities.length > 0 ? (
+            <>
+              <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink-soft">{dict.explore.matching}</p>
+              <ul className="mt-2 space-y-2">
+                {shown.map((opportunity) => {
+                  const firstWindow = opportunity.availability[0];
+                  return (
+                    <li key={opportunity.id} className="text-sm leading-snug">
+                      <span className="font-semibold">{opportunity.title[locale]}</span>
+                      <span className="block text-ink-soft">
+                        {dict.categories[opportunity.category]}
+                        {firstWindow ? ` · ${formatDateRange(locale, firstWindow.start, firstWindow.end)}` : null}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              {hiddenCount > 0 ? <p className="mt-2 text-xs font-semibold text-sea-700">{plural(locale, hiddenCount, dict.explore.more)}</p> : null}
+            </>
+          ) : (
+            <p className="text-sm text-ink-soft">{dict.explore.noOpportunities}</p>
+          )}
         </div>
       </div>
     </article>

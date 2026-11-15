@@ -38,12 +38,23 @@ function opportunityMatches(opportunity: PublicOpportunity, filters: DiscoveryFi
   return true;
 }
 
+/** Category, skill and travel dates narrow opportunities; country, city and type narrow hosts. */
+function hasOpportunityFilters(filters: DiscoveryFilters): boolean {
+  return Boolean(filters.category || filters.skill || filters.dates);
+}
+
 /**
- * Returns hosts that match the host-level filters AND have at least one opportunity matching
- * the opportunity-level filters. Hosts without a matching opportunity are not listed.
+ * Returns hosts that match the host-level filters, each with its opportunities that match the
+ * opportunity-level filters.
+ *
+ * Host profiles and opportunities are separate objects. Without an opportunity-level filter every
+ * matching host is listed — including a host with no current opportunities (empty `opportunities`).
+ * With an opportunity-level filter active, a host is listed only if at least one of its
+ * opportunities matches, so no host is ever presented as offering an opportunity it does not have.
  */
 export function searchHosts(data: DiscoveryDataset, filters: DiscoveryFilters): HostSearchResult[] {
   const cityQuery = filters.city ? normalizeText(filters.city) : '';
+  const requireOpportunity = hasOpportunityFilters(filters);
   return data.hosts
     .filter((host) => hostMatches(host, filters, cityQuery))
     .map((host) => ({
@@ -52,7 +63,7 @@ export function searchHosts(data: DiscoveryDataset, filters: DiscoveryFilters): 
         (opportunity) => opportunity.hostId === host.id && opportunityMatches(opportunity, filters),
       ),
     }))
-    .filter((result) => result.opportunities.length > 0);
+    .filter((result) => !requireOpportunity || result.opportunities.length > 0);
 }
 
 export interface Destination {
@@ -65,6 +76,8 @@ export interface Destination {
 export function listDestinations(data: DiscoveryDataset): Destination[] {
   const byCity = new Map<string, Destination>();
   for (const { host, opportunities } of searchHosts(data, {})) {
+    // Hosts without opportunities stay discoverable, but they do not make a city a destination.
+    if (opportunities.length === 0) continue;
     const key = `${host.location.countryCode}:${host.location.city.en}`;
     const existing = byCity.get(key);
     if (existing) {

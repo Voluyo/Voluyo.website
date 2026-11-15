@@ -11,6 +11,12 @@ Status: **frontend foundation only.** Everything under "Planned MVP boundaries" 
 - Expected scope (recorded before the first write): Next.js app skeleton, `src/app/[locale]/*` routes,
   `src/proxy.ts`, `src/i18n/*`, `src/domain/*`, `src/features/discovery/*`, `src/components/*`,
   `README.md`, this document. No API, database, auth or deployment artifacts.
+- Correction (same work item, no Jira key): hosts without opportunities stay discoverable.
+  Base SHA `a39b2798b44d503664b20f54e113385382b29a65`; gate: bounded existing discovery logic.
+  Approved scope: `src/features/discovery/search.ts`, `src/components/discovery/DiscoveryParts.tsx`,
+  `src/i18n/dictionaries/{en,de}.ts`, this document, and — extended by Product Owner approval —
+  `src/app/[locale]/hosts/[slug]/page.tsx`. Protected: authentication placeholders, search URL
+  contract, date validation, demo/production separation, privacy and all unrelated modules.
 
 ## 1. Current frontend
 
@@ -45,7 +51,12 @@ Unknown values are dropped. Rules:
   The client blocks navigation on invalid input; the server re-validates (using the earliest current
   date on Earth, UTC−12) and shows an error without applying the date filter.
 - Host-level filters (country, city, type) apply to hosts; opportunity-level filters (category, skill,
-  dates) apply to opportunities. A host is listed only if at least one opportunity matches.
+  dates) apply to opportunities. Host profiles and opportunities are separate objects: without an
+  opportunity-level filter, every host matching the host-level filters is listed — including hosts
+  with no current opportunity, whose card and profile say so. With an opportunity-level filter
+  active, a host is listed only if at least one of its opportunities matches; a host is never shown
+  as offering an opportunity it does not have.
+- Home-page destinations count opportunities, so only cities with at least one opportunity appear.
 - Dates use **overlap** (≥ 1 night) — discovery filtering, not matching.
 - City search is case/accent-insensitive across all localized names ("Lisbon" = "Lissabon").
 
@@ -84,6 +95,8 @@ Unknown values are dropped. Rules:
 - Host profile = identity, type, broad location, description, languages, media, verification state.
 - Opportunity = category, skills, availability, exchange description. Applications target an
   opportunity, not a host. Already reflected in the public types.
+- A host profile stays public without opportunities. Planned, not implemented: an "Express interest"
+  action for such hosts. Its contact and messaging behaviour is undecided; nothing is sent today.
 
 ### Search and public visibility
 

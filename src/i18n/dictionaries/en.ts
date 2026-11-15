@@ -131,6 +131,7 @@ export const en = {
     },
     matching: 'Matching opportunities',
     more: { one: '+{count} more', other: '+{count} more' },
+    noOpportunities: 'No open opportunities right now',
   },
   host: {
     breadcrumb: 'Breadcrumb',

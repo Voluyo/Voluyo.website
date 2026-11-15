@@ -129,6 +129,7 @@ export const de: Dictionary = {
     },
     matching: 'Passende Projekte',
     more: { one: '+{count} weiteres', other: '+{count} weitere' },
+    noOpportunities: 'Derzeit keine offenen Projekte',
   },
   host: {
     breadcrumb: 'Brotkrumennavigation',
